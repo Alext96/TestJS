@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+    <h2>Importera Kalender</h2>
+    <!--visar klickbar länk till timeedit-->
+    <a href="https://cloud.timeedit.net/ltu/web/schedule1/ri1Q8.html" target="_blank">Öppna TimeEdit</a>
+    <p>TimeEdit Url:</p>
+    <input type="text" name="timeEditUrl" id="timeEditUrl">
+    <input type="button" class="button" value="Importera" , id="timeEditButton">
+    <h2>Canvasuppgifter</h2>
+    <form>
+      <!--Denna form är inte implementerad än, se testjsjs.js-->
+        User ID:<br>
+        <input type="text" name="userId" id="userID"><br>
+        Canvas API Token:<br>
+        <input type="text" name="canvasToken" id="canvasToken">
+        <input type="button" class="button" value="Skicka">
+    </form>
+
+    <h2>Redigera kalender</h2>
+    <!--Parsade JSON resultat läggs in i formen nedan från timeEditUrl och kan sedan ändras baserat på behov-->
+    <form>
+        ID:<br>
+        <input type="text" name="id" id="id"><br>
+        Kurs:<br>
+        <input type="text" name="kurs" id="kurs"><br>
+        Aktivitet:<br>
+        <input type="text" name="aktivitet" id="aktivitet"><br>
+        Lärare:<br>
+        <input type="text" name="teacher" id="teacher"><br>
+        Service:<br>
+        <input type="text" name="service" id="service"><br>
+        Datum:<br>
+        <input type="text" name="date" id="date">
+        Start Tid:<br>
+        <input type="text" name="startTid" id="startTid">
+        Slut Tid:<br>
+        <input type="text" name="slutTid" id="slutTid">
+        Plats:<br>
+        <input type="text" name="plats" id="plats">
+        Beskrivning:<br>
+        <textarea rows="4" cols="50" id="beskrivning">
+Lektion idag
+</textarea>
+    </form>
+    <input type="button" class="button" value="Skicka" id="skickapostapi" onclick="skickaPostReq()">
+
+
+    <script type="text/javascript" src="testjsjs.js">
+    //scriptet som skickar POST Request, kräver xhr2(fick inte de och fungera annars)
+    </script>
+</body>
+
+</html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+</script>
+<script>
+    //document.getElementById('timeEditUrl').value = 'myValue';
+
+    var timeEditUrl = "https://cloud.timeedit.net/ltu/web/schedule1/ri158370052Z69Q506656575y60X5W3393Y63Q5Q26813ZY67Q.json";
+    //JSON Parser Funktion
+    $(document).ready(function() {
+        $.getJSON(timeEditUrl, function(jsonRes) {
+            var id = jsonRes.reservations[0].id
+            var startdate = jsonRes.reservations[0].startdate
+            var starttime = jsonRes.reservations[0].starttime
+            var enddate = jsonRes.reservations[0].enddate
+            var endtime = jsonRes.reservations[0].endtime
+            var location = jsonRes.reservations[0].columns[1]
+            var teacher = jsonRes.reservations[0].columns[2]
+            var activity = jsonRes.reservations[0].columns[3]
+            var course = jsonRes.reservations[0].columns[5]
+            var service = jsonRes.reservations[0].columns[8]
+
+            //populerar textfälten
+            $('#kurs').val(course);
+            $('#aktivitet').val(activity);
+            $('#teacher').val(teacher);
+            $('#service').val(service);
+            $('#startTid').val(starttime);
+            $('#slutTid').val(endtime);
+            $('#plats').val(location);
+            $('#date').val(startdate);
+            $('#id').val(id);
+        });
+    });
